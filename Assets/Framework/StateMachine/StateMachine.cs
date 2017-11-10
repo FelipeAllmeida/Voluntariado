@@ -38,7 +38,7 @@ namespace Framework
             _dictStates = new Dictionary<T, State<T>>();
 
             Transform __transform = this.transform;
-            if (__transform.FindChild("<States>") != null)
+            if (__transform.Find("<States>") != null)
             {
                 _sceneHasStates = true;
                 State<T>[] __arrayStatesFound = __transform.GetComponentsInChildren<State<T>>();
