@@ -9,7 +9,7 @@ using System.Data;
 public class LocalConnector
 {
     private IDbConnection _dbcon;
-    private string _dbName = "punk_hazard.sqdb";
+    private string _dbName = "Volunteering.sqdb";
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
 #endif
     // Need to load this name from a Config file
