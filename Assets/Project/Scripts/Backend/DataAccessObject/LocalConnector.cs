@@ -8,8 +8,8 @@ using System.Data;
 
 public class LocalConnector
 {
+    public static readonly string DBName = "Volunteering.sqdb";
     private IDbConnection _dbcon;
-    private string _dbName = "Volunteering.sqdb";
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
 #endif
     // Need to load this name from a Config file
@@ -37,37 +37,29 @@ public class LocalConnector
 	
 	private void GetAndroidDatabasePath()
 	{
-	_dbURI = "URI=file:" + Application.persistentDataPath + "/" +  _dbName;
+	_dbURI = "URI=file:" + Application.persistentDataPath + "/" +  DBName;
 	CreateDatabaseLogicForAndroid();
 	}
 
 	private void CreateDatabaseLogicForAndroid()
 	{
-	if(File.Exists(Application.persistentDataPath + "/" + _dbName) == false)
-	{
-	WWW www = new WWW ("jar:file://" + Application.dataPath + "!/assets/" + _dbName);
+	    if(File.Exists(Application.persistentDataPath + "/" + DBName) == false)
+	    {
+	        WWW www = new WWW ("jar:file://" + Application.dataPath + "!/assets/" + DBName);
 
-	while (!www.isDone) {}
+	        while (!www.isDone) {}
 
-	System.IO.File.WriteAllBytes(Application.persistentDataPath + "/" + _dbName, www.bytes);
+	        System.IO.File.WriteAllBytes(Application.persistentDataPath + "/" + DBName, www.bytes);
+	    }
+	    else
+	    {
+	        WWW www = new WWW ("jar:file://" + Application.dataPath + "!/assets/" + DBName);
 
-	InsertBundleVersionDataInDatabase(CurrentBundleVersion.version);
-	}
-	else
-	{
-	string __foundVersion = CheckBundleVersion();
+	        while (!www.isDone) {}
 
-	if (__foundVersion != CurrentBundleVersion.version)
-	{
-	WWW www = new WWW ("jar:file://" + Application.dataPath + "!/assets/" + _dbName);
+	        System.IO.File.WriteAllBytes(Application.persistentDataPath + "/" + DBName, www.bytes);
 
-	while (!www.isDone) {}
-
-	System.IO.File.WriteAllBytes(Application.persistentDataPath + "/" + _dbName, www.bytes);
-
-	InsertBundleVersionDataInDatabase(CurrentBundleVersion.version);
-	}
-	}
+	    }
 	}
 
 	
@@ -89,17 +81,17 @@ public class LocalConnector
 	
 	private void GetIOSDatabasePath()
 	{
-	_dbURI = "URI=file:" + Application.persistentDataPath + "/" +  _dbName;
+	_dbURI = "URI=file:" + Application.persistentDataPath + "/" +  DBName;
 	CreateDatabaseLogicForIOS();
 	}
 
 	private void CreateDatabaseLogicForIOS()
 	{
-	if(File.Exists(Application.persistentDataPath + "/" + _dbName) == false)
+	if(File.Exists(Application.persistentDataPath + "/" + DBName) == false)
 	{
-	System.IO.File.Copy(Application.dataPath + "/Raw/" +  _dbName, Application.persistentDataPath + "/" + _dbName, true);
+	System.IO.File.Copy(Application.dataPath + "/Raw/" +  DBName, Application.persistentDataPath + "/" + DBName, true);
 
-	UnityEngine.iOS.Device.SetNoBackupFlag(Application.persistentDataPath + "/" + _dbName);
+	UnityEngine.iOS.Device.SetNoBackupFlag(Application.persistentDataPath + "/" + DBName);
 
 	InsertBundleVersionDataInDatabase(CurrentBundleVersion.version);
 	}
@@ -109,11 +101,11 @@ public class LocalConnector
 
 	if (__foundVersion != CurrentBundleVersion.version)
 	{
-	System.IO.File.Copy(Application.dataPath + "/Raw/" +  _dbName, Application.persistentDataPath + "/" + _dbName, true);
+	System.IO.File.Copy(Application.dataPath + "/Raw/" +  DBName, Application.persistentDataPath + "/" + DBName, true);
 
 	InsertBundleVersionDataInDatabase(CurrentBundleVersion.version);
 
-	UnityEngine.iOS.Device.SetNoBackupFlag(Application.persistentDataPath + "/" + _dbName);
+	UnityEngine.iOS.Device.SetNoBackupFlag(Application.persistentDataPath + "/" + DBName);
 	}
 	}
 	}
@@ -134,57 +126,57 @@ public class LocalConnector
 	
 	private void GetMacDatabasePath ()
 	{
-		_dbURI = "URI=file:" + _macDBPath + "/" + _dbNameDecrypted;
+		_dbURI = "URI=file:" + _macDBPath + "/" + DBNameDecrypted;
 		CreateDatabaseLogicForMac ();
 	}
 
 	private void CreateDatabaseLogicForMac ()
 	{
 		if (Directory.Exists (_macDBPath) == true) {
-			if (File.Exists (_macDBPath + "/" + _dbName) == true) {
-				if (File.Exists (_macDBPath + "/" + _dbNameDecrypted) == true) {
-					if (File.Exists (_macDBPath + "/" + _dbName) == true) {
-						File.Delete (_macDBPath + "/" + _dbName);
+			if (File.Exists (_macDBPath + "/" + DBName) == true) {
+				if (File.Exists (_macDBPath + "/" + DBNameDecrypted) == true) {
+					if (File.Exists (_macDBPath + "/" + DBName) == true) {
+						File.Delete (_macDBPath + "/" + DBName);
 					}
 
-					SecureFile.EncryptFile (_macDBPath + "/" + _dbNameDecrypted, _macDBPath + "/" + _dbName);
+					SecureFile.EncryptFile (_macDBPath + "/" + DBNameDecrypted, _macDBPath + "/" + DBName);
 				} else {
-					SecureFile.DecryptFile (_macDBPath + "/" + _dbName, _macDBPath + "/" + _dbNameDecrypted);
+					SecureFile.DecryptFile (_macDBPath + "/" + DBName, _macDBPath + "/" + DBNameDecrypted);
 				}
 
 				string __foundVersion = CheckBundleVersion ();
 
 				if (__foundVersion != CurrentBundleVersion.version) {
-					if (File.Exists (_macDBPath + "/" + _dbName) == true) {
-						File.Delete (_macDBPath + "/" + _dbName);
+					if (File.Exists (_macDBPath + "/" + DBName) == true) {
+						File.Delete (_macDBPath + "/" + DBName);
 					}
-					if (File.Exists (_macDBPath + "/" + _dbNameDecrypted) == true) {
-						File.Delete (_macDBPath + "/" + _dbNameDecrypted);
+					if (File.Exists (_macDBPath + "/" + DBNameDecrypted) == true) {
+						File.Delete (_macDBPath + "/" + DBNameDecrypted);
 					}
 
-					File.Copy (Application.streamingAssetsPath + "/" + _dbName, _macDBPath + "/" + _dbName, true);
+					File.Copy (Application.streamingAssetsPath + "/" + DBName, _macDBPath + "/" + DBName, true);
 
-					SecureFile.DecryptFile (_macDBPath + "/" + _dbName, _macDBPath + "/" + _dbNameDecrypted);
+					SecureFile.DecryptFile (_macDBPath + "/" + DBName, _macDBPath + "/" + DBNameDecrypted);
 
 					InsertBundleVersionDataInDatabase (CurrentBundleVersion.version);
 				}
 			} else {
-				File.Copy (Application.streamingAssetsPath + "/" + _dbName, _macDBPath + "/" + _dbName, true);
+				File.Copy (Application.streamingAssetsPath + "/" + DBName, _macDBPath + "/" + DBName, true);
 
-				if (File.Exists (_macDBPath + "/" + _dbNameDecrypted) == true) {
-					if (File.Exists (_macDBPath + "/" + _dbName) == true) {
-						File.Delete (_macDBPath + "/" + _dbName);
+				if (File.Exists (_macDBPath + "/" + DBNameDecrypted) == true) {
+					if (File.Exists (_macDBPath + "/" + DBName) == true) {
+						File.Delete (_macDBPath + "/" + DBName);
 					}
 
-					SecureFile.EncryptFile (_macDBPath + "/" + _dbNameDecrypted, _macDBPath + "/" + _dbName);
+					SecureFile.EncryptFile (_macDBPath + "/" + DBNameDecrypted, _macDBPath + "/" + DBName);
 				} else {
-					SecureFile.DecryptFile (_macDBPath + "/" + _dbName, _macDBPath + "/" + _dbNameDecrypted);
+					SecureFile.DecryptFile (_macDBPath + "/" + DBName, _macDBPath + "/" + DBNameDecrypted);
 				}
 			}
 		} else {
 			Directory.CreateDirectory (_macDBPath);
-			File.Copy (Application.streamingAssetsPath + "/" + _dbName, _macDBPath + "/" + _dbName, true);
-			SecureFile.DecryptFile (_macDBPath + "/" + _dbName, _macDBPath + "/" + _dbNameDecrypted);
+			File.Copy (Application.streamingAssetsPath + "/" + DBName, _macDBPath + "/" + DBName, true);
+			SecureFile.DecryptFile (_macDBPath + "/" + DBName, _macDBPath + "/" + DBNameDecrypted);
 
 			InsertBundleVersionDataInDatabase (CurrentBundleVersion.version);
 		}
@@ -192,12 +184,12 @@ public class LocalConnector
 
 	private void UpdateDatabaseOSX ()
 	{
-		if (File.Exists (_macDBPath + "/" + _dbNameDecrypted) == true) {
-			if (File.Exists (_macDBPath + "/" + _dbName) == true) {
-				File.Delete (_macDBPath + "/" + _dbName);
+		if (File.Exists (_macDBPath + "/" + DBNameDecrypted) == true) {
+			if (File.Exists (_macDBPath + "/" + DBName) == true) {
+				File.Delete (_macDBPath + "/" + DBName);
 			}
-			SecureFile.EncryptFile (_macDBPath + "/" + _dbNameDecrypted, _macDBPath + "/" + _dbName);
-			File.Delete (_macDBPath + "/" + _dbNameDecrypted);
+			SecureFile.EncryptFile (_macDBPath + "/" + DBNameDecrypted, _macDBPath + "/" + DBName);
+			File.Delete (_macDBPath + "/" + DBNameDecrypted);
 		}
 	}
 
@@ -218,18 +210,18 @@ public class LocalConnector
         if (Directory.Exists(_windowsDBPath) == true)
         {
             Debug.Log("Directory Exists: " + _windowsDBPath);
-            if (File.Exists(_windowsDBPath + "/" + _dbName) == true)
+            if (File.Exists(_windowsDBPath + "/" + DBName) == true)
             {
-                File.Delete(_windowsDBPath + "/" + _dbName);
-                File.Copy(Application.streamingAssetsPath + "/" + _dbName, _windowsDBPath + "/" + _dbName, true);
+                File.Delete(_windowsDBPath + "/" + DBName);
+                File.Copy(Application.streamingAssetsPath + "/" + DBName, _windowsDBPath + "/" + DBName, true);
             }
-            /*//if (File.Exists(_windowsDBPath + "/" +_dbName) == true)
+            /*//if (File.Exists(_windowsDBPath + "/" +DBName) == true)
             {
-                if (File.Exists(_windowsDBPath + "/" +_dbNameDecrypted) == true)
+                if (File.Exists(_windowsDBPath + "/" +DBNameDecrypted) == true)
                 {
-                    if (File.Exists(_windowsDBPath + "/" +_dbName) == true)
+                    if (File.Exists(_windowsDBPath + "/" +DBName) == true)
                     {
-                        File.Delete(_windowsDBPath + "/" +_dbName);
+                        File.Delete(_windowsDBPath + "/" +DBName);
                     }
                 }
                 else
@@ -240,37 +232,37 @@ public class LocalConnector
 
                 if (__foundVersion != CurrentBundleVersion.version)
                 {
-                    if (File.Exists(_windowsDBPath + "/" +_dbName) == true)
+                    if (File.Exists(_windowsDBPath + "/" +DBName) == true)
                     {
-                        File.Delete(_windowsDBPath + "/" +_dbName);
+                        File.Delete(_windowsDBPath + "/" +DBName);
                     }
-                    if (File.Exists(_windowsDBPath + "/" +_dbNameDecrypted) == true)
+                    if (File.Exists(_windowsDBPath + "/" +DBNameDecrypted) == true)
                     {
-                        File.Delete(_windowsDBPath + "/" +_dbNameDecrypted);
+                        File.Delete(_windowsDBPath + "/" +DBNameDecrypted);
                     }
 
-                    File.Copy(Application.streamingAssetsPath + "/" +_dbName, _windowsDBPath + "/" +_dbName, true);
+                    File.Copy(Application.streamingAssetsPath + "/" +DBName, _windowsDBPath + "/" +DBName, true);
 
-                    SecureFile.DecryptFile(_windowsDBPath + "/" +_dbName, _windowsDBPath + "/" +_dbNameDecrypted);
+                    SecureFile.DecryptFile(_windowsDBPath + "/" +DBName, _windowsDBPath + "/" +DBNameDecrypted);
 
                     InsertBundleVersionDataInDatabase(CurrentBundleVersion.version);
                 }
             }
             else
             {
-                File.Copy(Application.streamingAssetsPath + "/" +_dbName, _windowsDBPath + "/" +_dbName, true);
+                File.Copy(Application.streamingAssetsPath + "/" +DBName, _windowsDBPath + "/" +DBName, true);
 
-                if (File.Exists(_windowsDBPath + "/" +_dbNameDecrypted) == true)
+                if (File.Exists(_windowsDBPath + "/" +DBNameDecrypted) == true)
                 {
-                    if (File.Exists(_windowsDBPath + "/" +_dbName) == true)
+                    if (File.Exists(_windowsDBPath + "/" +DBName) == true)
                     {
-                        File.Delete(_windowsDBPath + "/" +_dbName);
+                        File.Delete(_windowsDBPath + "/" +DBName);
                     }
-                    SecureFile.EncryptFile(_windowsDBPath + "/" +_dbNameDecrypted, _windowsDBPath + "/" +_dbName);
+                    SecureFile.EncryptFile(_windowsDBPath + "/" +DBNameDecrypted, _windowsDBPath + "/" +DBName);
                 }
                 else
                 {
-                    SecureFile.DecryptFile(_windowsDBPath + "/" +_dbName, _windowsDBPath + "/" +_dbNameDecrypted);
+                    SecureFile.DecryptFile(_windowsDBPath + "/" +DBName, _windowsDBPath + "/" +DBNameDecrypted);
                 }
             }*/
         }
@@ -278,7 +270,7 @@ public class LocalConnector
         {
             Debug.Log("Create Directory: " + _windowsDBPath);
             Directory.CreateDirectory(_windowsDBPath);
-            File.Copy(Application.streamingAssetsPath + "/" +_dbName, _windowsDBPath + "/" +_dbName, true);
+            File.Copy(Application.streamingAssetsPath + "/" +DBName, _windowsDBPath + "/" +DBName, true);
         }
     }
 
@@ -292,7 +284,7 @@ public class LocalConnector
 
     private void GetEditorDatabasePath()
     {
-        _dbURI = "URI = file:" +Application.dataPath + "/ StreamingAssets /" +_dbName;
+        _dbURI = "URI = file:" +Application.dataPath + "/ StreamingAssets /" +DBName;
     }
 
     #endregion
@@ -302,11 +294,11 @@ public class LocalConnector
     private void CreateDatabaseaAtCurrentPlatform()
     {
         //Debug.Log("CreateDatabaseaAtCurrentPlatform");
-//#if UNITY_EDITOR
-//        {
-//            GetEditorDatabasePath();
-//        }
-#if UNITY_IOS
+#if UNITY_EDITOR
+        {
+            GetEditorDatabasePath();
+        }
+#elif   UNITY_IOS
 		{
 		GetIOSDatabasePath();
 		}

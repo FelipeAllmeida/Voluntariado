@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UserDAO : DataAccessObject
-{
+{   
     private const string UserTable = "User";
-    private readonly string[] UserSelectKeys = { "account", "accountPassword", "name", "age", "volunteering", "rate" };
+    private readonly string[] UserSelectKeys = { "account", "accountPassword", "name", "age", "rate", "volunteering" };
 
     public override void AInitialize()
     {
@@ -26,8 +26,7 @@ public class UserDAO : DataAccessObject
         SelectDataFromTableAsync(SelectType.NONE, true, UserTable, UserSelectKeys, p_dictWhere, (List<Dictionary<string, string>> p_listData) =>
         {
             UserVO __userVO = null;
-
-            if (p_listData != null || p_listData.Count > 0)
+            if (p_listData != null && p_listData.Count > 0)
             {
                 __userVO = ConvertDictDataToUserVO(p_listData[0]);
             }
@@ -44,9 +43,9 @@ public class UserDAO : DataAccessObject
         UserVO __userVO = new UserVO();
 
         __userVO.name = p_dictData["account"];
-        __userVO.age = p_dictData["accountPassword"];
+        __userVO.accountPassword = p_dictData["accountPassword"];
         __userVO.name = p_dictData["name"];
-        __userVO.age = p_dictData["age"];
+        __userVO.age = int.Parse(p_dictData["age"]);
         __userVO.volunteering = bool.Parse(p_dictData["volunteering"]);
         __userVO.rate = float.Parse(p_dictData["rate"]);
 

@@ -27,7 +27,7 @@ public abstract class DataAccessObject
     protected Dictionary<string, string> _headers = new Dictionary<string, string>();
     #endregion
     #region Private Data
-    private string _dbName = "punk_hazard.sqdb";
+    private string _dbName = LocalConnector.DBName;
     private string _dbPath;
 #if UNITY_STANDALONE_OSX
 private string _macDBPath = System.Environment.GetFolderPath (Environment.SpecialFolder.Personal) + "/DBData";
@@ -391,6 +391,8 @@ Debug.Log("Update:" + __query);
             {
                 using (_dbCommand = _dbConnection.CreateCommand())
                 {
+                    Debug.Log(_dbConnection.ConnectionString);
+                    Debug.Log(_dbConnection.State);
                     _dbCommand.Connection = _dbConnection;
                     _dbCommand.Transaction = _dbTransaction;
                     _dbCommand.CommandText = BuildQuerySelect(p_selectType, p_selectAll, p_tableName, p_arraySelectKeys, p_dictWhere);
@@ -533,6 +535,7 @@ Debug.Log("Update:" + __query);
     {
         try
         {
+            Debug.Log(_dbPath);
             _dbConnection = new SqliteConnection(_dbPath);
             _dbConnection.Open();
         }
@@ -1002,11 +1005,11 @@ Debug.Log("Update:" + __query);
     }
     private void GetDatabasePath()
     {
-//#if UNITY_EDITOR
-//        {
-//            _dbPath = "URI=file:" + Application.dataPath + "/StreamingAssets/" + _dbName;
-//        }
-#if UNITY_IOS
+#if UNITY_EDITOR
+        {
+            _dbPath = "URI=file:" + Application.dataPath + "/StreamingAssets/" + _dbName;
+        }
+#elif UNITY_IOS
 {
 _dbPath = "URI=file:" + Application.persistentDataPath + "/" + _dbName;
 }
@@ -1015,7 +1018,7 @@ _dbPath = "URI=file:" + Application.persistentDataPath + "/" + _dbName;
 _dbPath = "URI=file:" + Application.persistentDataPath + "/" + _dbName; 
 }
 #elif UNITY_STANDALONE_WIN
-{
+        {
 _dbPath = "URI=file:" + _windowsDBPath + "/" + _dbName;
 }
 #elif UNITY_STANDALONE_OSX

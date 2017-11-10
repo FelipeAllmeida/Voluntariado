@@ -8,8 +8,8 @@ public class UserVO
     public string accountPassword;
 
     public string name;
-    public string age;
 
     public bool volunteering;
+    public int age;
     public float rate;
 }

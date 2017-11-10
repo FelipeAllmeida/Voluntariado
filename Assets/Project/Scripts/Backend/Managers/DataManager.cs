@@ -20,12 +20,19 @@ public class DataManager
     }
     #endregion
 
-    public static int connectedPlayers = 0;
     #region Private Data
 
     private LocalConnector _localConnector;
 
     #region DAO
+    private UserDAO _userDAO;
+    public UserDAO UserDAO 
+    {
+        get
+        {
+            return _userDAO;
+        }
+    }
     #endregion
 
     #endregion
@@ -35,5 +42,12 @@ public class DataManager
         _localConnector = new LocalConnector();
         _localConnector.AInitialize();
 
+        InitializeDataAccessObjects();
+    }
+
+    private void InitializeDataAccessObjects()
+    {
+        _userDAO = new UserDAO();
+        _userDAO.AInitialize();
     }
 }
