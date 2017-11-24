@@ -33,6 +33,24 @@ public class DataManager
             return _userDAO;
         }
     }
+
+    private NoticeDAO _noticeDAO;
+    public NoticeDAO NoticeDAO
+    {
+        get
+        {
+            return _noticeDAO;
+        }
+    }
+
+    private EventDAO _eventDAO;
+    public EventDAO EventDAO
+    {
+        get
+        {
+            return _eventDAO;
+        }
+    }
     #endregion
 
     #endregion
@@ -48,6 +66,11 @@ public class DataManager
     private void InitializeDataAccessObjects()
     {
         _userDAO = new UserDAO();
+        _noticeDAO = new NoticeDAO();
+        _eventDAO = new EventDAO();
+
         _userDAO.AInitialize();
+        _noticeDAO.AInitialize();
+        _eventDAO.AInitialize();
     }
 }

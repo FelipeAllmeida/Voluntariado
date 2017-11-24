@@ -365,6 +365,7 @@ Debug.Log("Update:" + __query);
                     for (int i = 0;i < p_arraySelectKeys.Length;i++)
                     {
                         string __stringRow = _dbReader.GetString(i);
+
                         __dictRowLoaded.Add(p_arraySelectKeys[i], __stringRow);
                     }
                 }
@@ -552,6 +553,7 @@ Debug.Log("Update:" + __query);
         {
             _dbCommand.Connection = _dbConnection;
             _dbCommand.CommandText = BuildQuerySelect(p_selectType, p_selectAll, p_tableName, p_arraySelectKeys, p_dictWhere);
+            Debug.Log(_dbCommand.CommandText);
             try
             {
                 _dbReader = _dbCommand.ExecuteReader();
@@ -560,7 +562,15 @@ Debug.Log("Update:" + __query);
                     Dictionary<string, string> __dictSelectedData = new Dictionary<string, string>();
                     for (int i = 0;i < p_arraySelectKeys.Length;i++)
                     {
-                        string __rowLoaded = _dbReader.GetString(i);
+                        string __rowLoaded = string.Empty;
+                        if (typeof(DateTime) == _dbReader.GetFieldType(i))
+                        {
+                            __rowLoaded = _dbReader.GetString(i);
+                        }
+                        else
+                        {
+                            __rowLoaded = _dbReader.GetValue(i).ToString();
+                        }
                         __dictSelectedData.Add(p_arraySelectKeys[i], __rowLoaded);
                     }
                     __listDataLoaded.Add(__dictSelectedData);

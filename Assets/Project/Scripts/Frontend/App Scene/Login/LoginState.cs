@@ -15,6 +15,7 @@ public class LoginState : State<AppScene.StateType>
 
     public override void Enable()
     {
+        Screen.SetResolution(1600, 2560, false);
         DataManager.instance.AInitialize(null);
         ListenEvents();
         gameObject.SetActive(true);
@@ -32,10 +33,12 @@ public class LoginState : State<AppScene.StateType>
 
     private void HandleOnContinueButtonClick()
     {
-        DataManager.instance.UserDAO.GetUserByAccountAndPassword(_accountField.text, _accountPasswordField.text, (UserVO p_userVO) =>
+        UserVO __userVO = DataManager.instance.UserDAO.GetUserByAccountAndPassword(_accountField.text, _accountPasswordField.text);
+
+        if (__userVO != null)
         {
-            if (p_userVO != null)
-                stateMachine.ChangeToState(AppScene.StateType.APPLICATION);
-        });
+            UserData.SetMainUser(__userVO);
+            stateMachine.ChangeToState(AppScene.StateType.APPLICATION);
+        }
     }
 }
